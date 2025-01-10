@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:techhub/signin.dart';
+import 'package:techhub/view/forgotpass.dart';
+import 'package:techhub/view/signup.dart';
 
-class SignUpPage extends StatelessWidget {
-  const SignUpPage({super.key});
+class SignInPage extends StatelessWidget {
+  const SignInPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Logo
               Center(
@@ -36,27 +34,19 @@ class SignUpPage extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                        color: Color.fromARGB(255, 0, 0, 0),
                       ),
                     ),
                   ],
                 ),
               ),
               SizedBox(height: 40),
-              // Sign Up Text
+              // Sign-in Text
               Text(
-                'Sign Up',
+                'Sign in',
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 20),
-              // Username TextField
-              TextField(
-                decoration: InputDecoration(
-                  labelText: 'Username',
-                  border: UnderlineInputBorder(),
                 ),
               ),
               SizedBox(height: 20),
@@ -77,17 +67,39 @@ class SignUpPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 10),
-              // Sign Up Button
+              // Remember Me and Forgot Password
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Checkbox(value: false, onChanged: (value) {}),
+                      Text('Remember me'),
+                    ],
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ForgotPassPage()),
+                      );
+                    },
+                    child: Text('Forgot Password?'),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              // Sign In Button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.lightBlue,
+                    backgroundColor: const Color.fromARGB(255, 130, 88, 165),
                     padding: EdgeInsets.symmetric(vertical: 15),
                   ),
                   child: Text(
-                    'Sign Up',
+                    'Sign in',
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.white,
@@ -96,22 +108,19 @@ class SignUpPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 20),
-              // Sign In Text
+              // Sign Up Text
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Already have an account? "),
+                  Text("Don't have an account? "),
                   TextButton(
                     onPressed: () {
-                      Navigator.push (
+                      Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => SignInPage()),
+                        MaterialPageRoute(builder: (context) => SignUpPage()),
                       );
                     },
-                    child: Text(
-                      'Sign In',
-                      style: TextStyle(color: Colors.blue),
-                    ),
+                    child: Text('Sign Up'),
                   ),
                 ],
               ),
@@ -121,4 +130,10 @@ class SignUpPage extends StatelessWidget {
       ),
     );
   }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: SignInPage(),
+  ));
 }

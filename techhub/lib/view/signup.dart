@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:techhub/signup.dart';
+import 'package:techhub/view/signin.dart';
 
-class SignInPage extends StatelessWidget {
-  const SignInPage({super.key});
+class SignUpPage extends StatelessWidget {
+  const SignUpPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Logo
               Center(
@@ -33,19 +36,27 @@ class SignInPage extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: Colors.black,
                       ),
                     ),
                   ],
                 ),
               ),
               SizedBox(height: 40),
-              // Sign-in Text
+              // Sign Up Text
               Text(
-                'Sign in',
+                'Sign Up',
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 20),
+              // Username TextField
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Username',
+                  border: UnderlineInputBorder(),
                 ),
               ),
               SizedBox(height: 20),
@@ -66,34 +77,17 @@ class SignInPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 10),
-              // Remember Me and Forgot Password
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Checkbox(value: false, onChanged: (value) {}),
-                      Text('Remember me'),
-                    ],
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text('Forgot Password?'),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20),
-              // Sign In Button
+              // Sign Up Button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 130, 88, 165),
+                    backgroundColor: Colors.lightBlue,
                     padding: EdgeInsets.symmetric(vertical: 15),
                   ),
                   child: Text(
-                    'Sign in',
+                    'Sign Up',
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.white,
@@ -102,19 +96,22 @@ class SignInPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 20),
-              // Sign Up Text
+              // Sign In Text
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Don't have an account? "),
+                  Text("Already have an account? "),
                   TextButton(
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.push (
                         context,
-                        MaterialPageRoute(builder: (context) => SignUpPage()),
+                        MaterialPageRoute(builder: (context) => SignInPage()),
                       );
                     },
-                    child: Text('Sign Up'),
+                    child: Text(
+                      'Sign In',
+                      style: TextStyle(color: Colors.blue),
+                    ),
                   ),
                 ],
               ),
@@ -124,10 +121,4 @@ class SignInPage extends StatelessWidget {
       ),
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: SignInPage(),
-  ));
 }

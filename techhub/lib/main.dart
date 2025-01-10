@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:techhub/signin.dart';
-import 'package:techhub/signup.dart';
+import 'package:techhub/view/signin.dart';
+import 'package:techhub/view/signup.dart';
 
 void main() {
   runApp(const MyApp());
