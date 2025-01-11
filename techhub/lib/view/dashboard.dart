@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:techhub/view/cart.dart';
 import 'package:techhub/view/message.dart';
+import 'package:techhub/view/profile.dart';
 
 void main() {
   runApp(const MyApp());
@@ -168,6 +169,12 @@ class DashboardPage extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => CartApp()),
+            );
+          }
+          if (index == 3) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ProfilePage()),
             );
           }
         },
