@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:techhub/view/dashboard.dart';
 import 'package:techhub/view/forgotpass.dart';
 import 'package:techhub/view/signup.dart';
 
@@ -93,7 +94,12 @@ class SignInPage extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => DashboardPage()),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 130, 88, 165),
                     padding: EdgeInsets.symmetric(vertical: 15),
