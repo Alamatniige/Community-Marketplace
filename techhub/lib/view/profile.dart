@@ -3,6 +3,7 @@ import 'package:techhub/view/address.dart';
 import 'package:techhub/view/changeemail.dart';
 import 'package:techhub/view/changepass.dart';
 import 'package:techhub/view/personalinfo.dart';
+import 'package:techhub/view/sellitem.dart';
 
 void main() {
   runApp(const MyApp());
@@ -97,6 +98,14 @@ class ProfilePage extends StatelessWidget {
                     trailing: const Icon(Icons.arrow_forward_ios),
                     onTap: () {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => const ChangeEmailAddressPage()));
+                    },
+                  ),
+                  const Divider(),
+                  ListTile(
+                    title: const Text('Sell an Item'),
+                    trailing: const Icon(Icons.arrow_forward_ios),
+                    onTap: () {
+Navigator.push(context, MaterialPageRoute(builder: (context) => const SellPage()));
                     },
                   ),
                   const Divider(),
