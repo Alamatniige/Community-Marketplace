@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:techhub/controller/signin_controller.dart';
 import 'package:techhub/view/dashboard.dart';
 import 'package:techhub/view/forgotpass.dart';
 import 'package:techhub/view/signup.dart';
 
-class SignInPage extends StatelessWidget {
+class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
+
+  @override
+  State<SignInPage> createState() => _SignInPageState();
+}
+
+class _SignInPageState extends State<SignInPage> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _controller = SignInController();
 
   @override
   Widget build(BuildContext context) {
@@ -41,33 +51,35 @@ class SignInPage extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
               // Sign-in Text
-              Text(
+              const Text(
                 'Sign in',
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               // Email Address TextField
               TextField(
-                decoration: InputDecoration(
+                controller: _emailController,
+                decoration: const InputDecoration(
                   labelText: 'Email Address',
                   border: UnderlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               // Password TextField
               TextField(
+                controller: _passwordController,
                 obscureText: true,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Password',
                   border: UnderlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               // Remember Me and Forgot Password
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -75,7 +87,7 @@ class SignInPage extends StatelessWidget {
                   Row(
                     children: [
                       Checkbox(value: false, onChanged: (value) {}),
-                      Text('Remember me'),
+                      const Text('Remember me'),
                     ],
                   ),
                   TextButton(
@@ -85,26 +97,45 @@ class SignInPage extends StatelessWidget {
                         MaterialPageRoute(builder: (context) => ForgotPassPage()),
                       );
                     },
-                    child: Text('Forgot Password?'),
+                    child: const Text('Forgot Password?'),
                   ),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               // Sign In Button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: (){
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => DashboardPage()),
-                    );
+                  onPressed: () async {
+                    final email = _emailController.text.trim();
+                    final password = _passwordController.text.trim();
+
+                    if (email.isNotEmpty && password.isNotEmpty) {
+                      try {
+                        await _controller.signIn(email, password);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Sign-in successful!')),
+                        );
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => DashboardPage()),
+                        );
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Sign-in failed: $e')),
+                        );
+                      }
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('All fields are required')),
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 130, 88, 165),
-                    padding: EdgeInsets.symmetric(vertical: 15),
+                    padding: const EdgeInsets.symmetric(vertical: 15),
                   ),
-                  child: Text(
+                  child: const Text(
                     'Sign in',
                     style: TextStyle(
                       fontSize: 16,
@@ -113,12 +144,12 @@ class SignInPage extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               // Sign Up Text
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Don't have an account? "),
+                  const Text("Don't have an account? "),
                   TextButton(
                     onPressed: () {
                       Navigator.push(
@@ -126,7 +157,7 @@ class SignInPage extends StatelessWidget {
                         MaterialPageRoute(builder: (context) => SignUpPage()),
                       );
                     },
-                    child: Text('Sign Up'),
+                    child: const Text('Sign Up'),
                   ),
                 ],
               ),
@@ -136,10 +167,4 @@ class SignInPage extends StatelessWidget {
       ),
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: SignInPage(),
-  ));
 }
