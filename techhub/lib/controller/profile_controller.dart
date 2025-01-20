@@ -13,8 +13,7 @@ class ProfileController {
   Future<void> initializeProfile() async {
     try {
       // Get the current user from the session
-      _currentUser = _supabase.auth.currentUser;
-      
+      _currentUser = _supabase.auth.currentUser;      
       if (_currentUser != null) {
         // Query user data using the current user's email directly, ensuring it’s not null
         final email = _currentUser!.email;

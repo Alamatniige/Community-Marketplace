@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:techhub/view/address.dart';
+import 'package:techhub/view/listings.dart';
 import 'package:techhub/view/changeemail.dart';
 import 'package:techhub/view/changepass.dart';
 import 'package:techhub/view/personalinfo.dart';
@@ -107,19 +107,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         const Divider(),
                         ListTile(
-                          title: const Text('Address Info'),
-                          trailing: const Icon(Icons.arrow_forward_ios),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const AddressInfoPage(),
-                              ),
-                            );
-                          },
-                        ),
-                        const Divider(),
-                        ListTile(
                           title: const Text('Change Password'),
                           trailing: const Icon(Icons.arrow_forward_ios),
                           onTap: () {
@@ -157,6 +144,27 @@ class _ProfilePageState extends State<ProfilePage> {
                             );
                           },
                         ),
+                        const Divider(),
+                        ListTile(
+                          title: const Text('Check Your Listings'),
+                          trailing: const Icon(Icons.arrow_forward_ios),
+                          onTap: () {
+                            final userId = _profileController.currentUser?.id;
+                            if (userId != null) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => OnSaleListPage(userId: userId),
+                                ),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('User not authenticated')),
+                              );
+                            }
+                          },
+                        ),
+
                         const Divider(),
                         ListTile(
                           title: const Text('Sign Out'),
