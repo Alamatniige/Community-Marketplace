@@ -14,13 +14,46 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   final ItemController _itemController = ItemController();
+  final TextEditingController _searchController = TextEditingController();
 
   late Future<Map<String, List>> categorizedItems;
+  List<Item> _searchResults = [];
+  bool _isSearching = false;
 
   @override
   void initState() {
     super.initState();
     categorizedItems = _itemController.fetchItemsByCategory();
+    _searchController.addListener(_onSearch);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearch() {
+    final query = _searchController.text.trim().toLowerCase();
+    if (query.isEmpty) {
+      setState(() {
+        _isSearching = false;
+        _searchResults = [];
+      });
+      return;
+    }
+
+    categorizedItems.then((categories) {
+      final results = categories.values
+          .expand((items) => items)
+          .where((item) => item.name.toLowerCase().contains(query))
+          .toList();
+
+      setState(() {
+        _isSearching = true;
+        _searchResults = results.cast<Item>();
+      });
+    });
   }
 
   @override
@@ -69,11 +102,16 @@ class _DashboardPageState extends State<DashboardPage> {
                 }
 
                 final categories = snapshot.data!;
+                final displayItems = _isSearching
+                    ? {"Search Results": _searchResults}
+                    : categories;
+
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const TextField(
-                      decoration: InputDecoration(
+                    TextField(
+                      controller: _searchController,
+                      decoration: const InputDecoration(
                         prefixIcon: Icon(Icons.search),
                         hintText: "Search Product",
                         border: OutlineInputBorder(
@@ -82,7 +120,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    ...categories.entries.map((entry) {
+                    ...displayItems.entries.map((entry) {
                       final categoryName = entry.key;
                       final items = entry.value;
 
@@ -103,7 +141,7 @@ class _DashboardPageState extends State<DashboardPage> {
                               itemBuilder: (context, index) {
                                 return ProductCard(
                                   product: items[index],
-                                  userId: userId, // Pass userId here
+                                  userId: userId,
                                 );
                               },
                             ),
@@ -193,7 +231,6 @@ class ProductCard extends StatelessWidget {
                   image: NetworkImage(product.imageUrl),
                   fit: BoxFit.cover,
                   onError: (exception, stackTrace) {
-                    // Fallback or error handling
                     print('Image load error: $exception');
                   },
                 ),
@@ -222,10 +259,8 @@ class ProductCard extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) => ChatView(
-                          userId: userId!, 
+                          userId: userId!,
                           receiverId: product.sellerId!,
-                          
-                          
                         ),
                       ),
                     );
@@ -251,4 +286,3 @@ class ProductCard extends StatelessWidget {
     );
   }
 }
-

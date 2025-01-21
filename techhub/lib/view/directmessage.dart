@@ -13,6 +13,38 @@ class ChatView extends StatefulWidget {
   _ChatViewState createState() => _ChatViewState();
 }
 
+class MessageBubble extends StatelessWidget {
+  final Message message;
+  final bool isMyMessage;
+
+  const MessageBubble({
+    super.key,
+    required this.message,
+    required this.isMyMessage,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: isMyMessage ? Alignment.centerRight : Alignment.centerLeft,
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: isMyMessage ? Colors.blue : Colors.grey[300],
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Text(
+          message.content,
+          style: TextStyle(
+            color: isMyMessage ? Colors.white : Colors.black,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _ChatViewState extends State<ChatView> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
@@ -38,20 +70,28 @@ class _ChatViewState extends State<ChatView> {
   }
 
   Future<void> _initializeChat() async {
-    final conversationId = await _controller.fetchConversationId(
-      widget.userId,
-      widget.receiverId,
-    );
-    
-    if (conversationId.isNotEmpty) {
+    try {
+      // Get or create conversation between the two users
+      _conversationId = await _controller.getOrCreateConversation(
+        widget.userId,
+        widget.receiverId,
+      );
+
+      if (_conversationId.isNotEmpty) {
+        setState(() {
+          _isConversationReady = true;
+        });
+
+        await _loadMessages();
+
+        _subscribeToMessages();
+
+      }
+    } catch (e) {
+      print('Error initializing chat: $e');
       setState(() {
-        _conversationId = conversationId;
-        _isConversationReady = true;
+        _isConversationReady = false;
       });
-      
-      await _loadMessages();
-      _subscribeToMessages();
-      _markMessagesAsRead();
     }
   }
 
@@ -63,54 +103,51 @@ class _ChatViewState extends State<ChatView> {
     _scrollToBottom();
   }
 
-  void _subscribeToMessages() {
-    _messageSubscription = _controller.subscribeToMessages(
-      _conversationId,
-      (newMessage) {
-        setState(() {
-          _messages.add(newMessage);
-        });
-        _scrollToBottom();
-        
-        // Mark message as read if received
-        if (newMessage.receiverId == widget.userId) {
-          _markMessagesAsRead();
-        }
-      },
-    );
-  }
-
-  Future<void> _markMessagesAsRead() async {
-    await _controller.markMessagesAsRead(_conversationId, widget.userId);
-  }
-
   void _scrollToBottom() {
     if (_scrollController.hasClients) {
-      Future.delayed(const Duration(milliseconds: 100), () {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
-      });
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
     }
   }
 
+  void _subscribeToMessages() {
+    try {
+      _messageSubscription = _controller.subscribeToMessages(
+        _conversationId,
+        widget.userId,
+        (newMessage) {
+          setState(() {
+            _messages.add(newMessage);
+          });
+          _scrollToBottom();
+          
+        },
+      );
+    } catch (e) {
+      print('Error subscribing to messages: $e');
+    }
+  }
+
+  
   Future<void> _sendMessage() async {
     if (_messageController.text.isEmpty || !_isConversationReady) return;
 
-    final messageText = _messageController.text;
+    final messageText = _messageController.text.trim();
     _messageController.clear();
 
     try {
       final message = await _controller.sendMessage(
-        widget.userId,
-        widget.receiverId,
-        messageText,
-        _conversationId,
+        senderId: widget.userId,
+        receiverId: widget.receiverId,
+        content: messageText,
       );
-      
-      if (message == null) {
+
+      if (message != null) {
+        _scrollToBottom();
+      } else {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Failed to send message')),
@@ -118,6 +155,7 @@ class _ChatViewState extends State<ChatView> {
         }
       }
     } catch (e) {
+      print('Error sending message: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error: $e')),
@@ -200,66 +238,5 @@ class _ChatViewState extends State<ChatView> {
         ],
       ),
     );
-  }
-}
-
-class MessageBubble extends StatelessWidget {
-  final Message message;
-  final bool isMyMessage;
-
-  const MessageBubble({
-    super.key,
-    required this.message,
-    required this.isMyMessage,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: isMyMessage ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 4),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: isMyMessage ? Colors.blue[100] : Colors.grey[300],
-          borderRadius: BorderRadius.circular(12),
-        ),
-        constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width * 0.7,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              message.content,
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              _formatDateTime(message.sentAt),
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey[600],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  String _formatDateTime(DateTime dateTime) {
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    final messageDate = DateTime(
-      dateTime.year,
-      dateTime.month,
-      dateTime.day,
-    );
-
-    if (messageDate == today) {
-      return '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
-    }
-    return '${dateTime.day}/${dateTime.month} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
   }
 }

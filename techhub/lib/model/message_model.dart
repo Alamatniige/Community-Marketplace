@@ -25,7 +25,7 @@ class Message {
     content: map['content'] as String? ?? 'No content',  // Provide a default value if null
     sentAt: map['sent_at'] != null ? DateTime.parse(map['sent_at'] as String) : DateTime.now(),  // Default to current time if null
     isRead: map['is_read'] as bool? ?? false,  // Default to false if null
-    conversationId: map['conversation_id'] as String? ?? 'default_conversation',  // Provide a default value if null
+    conversationId: map['conversations_id'] as String? ?? 'default_conversation',  // Provide a default value if null
   );
 }
 

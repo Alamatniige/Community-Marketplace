@@ -1,3 +1,4 @@
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SignInController {
@@ -5,12 +6,10 @@ class SignInController {
   Session? _currentSession;
   User? _currentUser;
 
-  // Getters for session info
   Session? get currentSession => _currentSession;
   User? get currentUser => _currentUser;
   bool get isAuthenticated => _currentUser != null;
 
-  // Initialize and check for existing session
   Future<void> initializeSession() async {
     try {
       // Get current session if it exists
@@ -46,8 +45,8 @@ class SignInController {
       throw Exception('Session initialization failed: $e');
     }
   }
-
-  Future<void> signIn(String email, String password) async {
+  
+  Future<void> signIn(String email, String password, {bool rememberMe = false}) async {
     try {
       final response = await _supabase.auth.signInWithPassword(
         email: email,
@@ -58,6 +57,13 @@ class SignInController {
         _currentSession = response.session;
         _currentUser = response.user;
         print('Sign-in successful: ${response.user?.email}');
+
+        // Save credentials if "Remember Me" is checked
+        if (rememberMe) {
+          await saveCredentials(email, password);
+        } else {
+          await clearCredentials();
+        }
       } else {
         throw Exception('Sign-in failed: Invalid credentials');
       }
@@ -66,38 +72,6 @@ class SignInController {
       throw Exception('Error during sign-in: $e');
     }
   }
-
-Future<void> ensureUserRecord(User authUser) async {
-  final supabase = Supabase.instance.client;
-  
-  try {
-    final existingUser = await supabase
-        .from('user')
-        .select()
-        .eq('id', authUser.id)
-        .maybeSingle();  // Ensure single result
-    
-    if (existingUser == null) {
-      // User does not exist in the database, create new record
-      final response = await supabase
-          .from('user')
-          .insert({
-            'id': authUser.id,  // Use auth ID
-            'email': authUser.email,
-            'fullName': '',
-            'username': '',
-            'contactNum': '',
-          })
-          .select();
-      print('New user created: $response');
-    } else {
-      print('User already exists: ${existingUser['id']}');
-    }
-  } catch (error) {
-    print('Error ensuring user record: $error');
-    rethrow;
-  }
-}
 
   Future<void> signOut() async {
     try {
@@ -111,14 +85,24 @@ Future<void> ensureUserRecord(User authUser) async {
     }
   }
 
-  Future<void> refreshSession() async {
-    try {
-      _currentSession = _supabase.auth.currentSession;
-      _currentUser = _currentSession?.user;
-      print('Session refreshed for user: ${_currentUser?.email}');
-    } catch (e) {
-      print('Session refresh error: $e');
-      throw Exception('Error refreshing session: $e');
-    }
+  Future<void> saveCredentials(String email, String password) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('email', email);
+    await prefs.setString('password', password);
+    print('Credentials saved.');
+  }
+
+  Future<Map<String, String?>> loadCredentials() async {
+    final prefs = await SharedPreferences.getInstance();
+    final email = prefs.getString('email');
+    final password = prefs.getString('password');
+    return {'email': email, 'password': password};
+  }
+
+  Future<void> clearCredentials() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('email');
+    await prefs.remove('password');
+    print('Credentials cleared.');
   }
 }

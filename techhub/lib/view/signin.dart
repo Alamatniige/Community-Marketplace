@@ -16,6 +16,25 @@ class _SignInPageState extends State<SignInPage> {
   final _passwordController = TextEditingController();
   final _controller = SignInController();
 
+  bool _rememberMe = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSavedCredentials();
+  }
+
+  Future<void> _loadSavedCredentials() async {
+    final credentials = await _controller.loadCredentials();
+    if (credentials['email'] != null && credentials['password'] != null) {
+      setState(() {
+        _emailController.text = credentials['email']!;
+        _passwordController.text = credentials['password']!;
+        _rememberMe = true;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,7 +105,14 @@ class _SignInPageState extends State<SignInPage> {
                 children: [
                   Row(
                     children: [
-                      Checkbox(value: false, onChanged: (value) {}),
+                      Checkbox(
+                        value: _rememberMe,
+                        onChanged: (value) {
+                          setState(() {
+                            _rememberMe = value ?? false;
+                          });
+                        },
+                      ),
                       const Text('Remember me'),
                     ],
                   ),
@@ -94,7 +120,9 @@ class _SignInPageState extends State<SignInPage> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ForgotPassPage()),
+                        MaterialPageRoute(
+                          builder: (context) => ForgotPassPage(),
+                        ),
                       );
                     },
                     child: const Text('Forgot Password?'),
@@ -112,7 +140,11 @@ class _SignInPageState extends State<SignInPage> {
 
                     if (email.isNotEmpty && password.isNotEmpty) {
                       try {
-                        await _controller.signIn(email, password);
+                        await _controller.signIn(
+                          email,
+                          password,
+                          rememberMe: _rememberMe,
+                        );
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Sign-in successful!')),
                         );
