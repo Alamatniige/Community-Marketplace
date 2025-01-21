@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:techhub/view/dashboard.dart';
 import 'package:techhub/view/listings.dart';
 import 'package:techhub/view/changeemail.dart';
 import 'package:techhub/view/changepass.dart';
@@ -50,7 +51,12 @@ class _ProfilePageState extends State<ProfilePage> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const DashboardPage(),
+              ),
+            );
           },
         ),
         title: const Text('Tech Hub', style: TextStyle(color: Colors.white)),
@@ -62,11 +68,11 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Column(
                 children: [
                   // Profile Section
-                  Center(
+                  const Center(
                     child: CircleAvatar(
                       radius: 50,
-                      backgroundColor: const Color.fromARGB(255, 0, 0, 0),
-                      child: const Icon(
+                      backgroundColor: Color.fromARGB(255, 0, 0, 0),
+                      child: Icon(
                         Icons.person,
                         color: Colors.white,
                         size: 50,
@@ -139,7 +145,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => SellPage(),
+                                builder: (context) => const SellPage(),
                               ),
                             );
                           },

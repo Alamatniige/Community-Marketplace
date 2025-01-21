@@ -65,94 +65,102 @@ class _DashboardPageState extends State<DashboardPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Row(
+          title: const Row(
             children: [
-              const Spacer(),
-              const CircleAvatar(
+              Spacer(),
+              CircleAvatar(
                 backgroundColor: Color.fromARGB(255, 0, 0, 0),
                 child: Icon(
                   Icons.headset,
                   color: Color.fromARGB(255, 255, 255, 255),
                 ),
               ),
-              const SizedBox(width: 5),
-              const Text(
+              SizedBox(width: 5),
+              Text(
                 "Tech-Hub",
                 style: TextStyle(color: Colors.white),
               ),
-              const Spacer(),
+              Spacer(),
             ],
           ),
           backgroundColor: Colors.blue,
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: SingleChildScrollView(
-            child: FutureBuilder<Map<String, List>>(
-              future: categorizedItems,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                }
-                if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text('No items available.'));
-                }
+        body: RefreshIndicator(
+          onRefresh: () async {
+            // Reload the categorized items
+            setState(() {
+              categorizedItems = _itemController.fetchItemsByCategory();
+            });
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: SingleChildScrollView(
+              child: FutureBuilder<Map<String, List>>(
+                future: categorizedItems,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  }
+                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(child: Text('No items available.'));
+                  }
 
-                final categories = snapshot.data!;
-                final displayItems = _isSearching
-                    ? {"Search Results": _searchResults}
-                    : categories;
+                  final categories = snapshot.data!;
+                  final displayItems = _isSearching
+                      ? {"Search Results": _searchResults}
+                      : categories;
 
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextField(
-                      controller: _searchController,
-                      decoration: const InputDecoration(
-                        prefixIcon: Icon(Icons.search),
-                        hintText: "Search Product",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextField(
+                        controller: _searchController,
+                        decoration: const InputDecoration(
+                          prefixIcon: Icon(Icons.search),
+                          hintText: "Search Product",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    ...displayItems.entries.map((entry) {
-                      final categoryName = entry.key;
-                      final items = entry.value;
+                      const SizedBox(height: 10),
+                      ...displayItems.entries.map((entry) {
+                        final categoryName = entry.key;
+                        final items = entry.value;
 
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            categoryName,
-                            style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 5),
-                          SizedBox(
-                            height: 150,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: items.length,
-                              itemBuilder: (context, index) {
-                                return ProductCard(
-                                  product: items[index],
-                                  userId: userId,
-                                );
-                              },
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              categoryName,
+                              style: const TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
                             ),
-                          ),
-                          const SizedBox(height: 20),
-                        ],
-                      );
-                    }),
-                  ],
-                );
-              },
+                            const SizedBox(height: 5),
+                            SizedBox(
+                              height: 150,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: items.length,
+                                itemBuilder: (context, index) {
+                                  return ProductCard(
+                                    product: items[index],
+                                    userId: userId,
+                                  );
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                          ],
+                        );
+                      }),
+                    ],
+                  );
+                },
+              ),
             ),
           ),
         ),

@@ -80,7 +80,7 @@ class _OnSaleListPageState extends State<OnSaleListPage> {
                             });
 
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Status updated successfully')),
+                              const SnackBar(content: Text('Status updated successfully')),
                             );
                           } catch (e) {
                             ScaffoldMessenger.of(context).showSnackBar(

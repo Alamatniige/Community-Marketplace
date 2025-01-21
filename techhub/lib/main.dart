@@ -23,9 +23,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const WelcomePage(),
+      home: WelcomePage(),
     );
   }
 }
@@ -41,7 +41,7 @@ class WelcomePage extends StatelessWidget {
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('lib/assets/images/SignUpBG.jpg'),
+                image: AssetImage('lib/assets/images/bgwelcome.jpg'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -64,10 +64,12 @@ class WelcomePage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               // Logo
-              Center(
-                child: Column(
-                  children: const [
-                    CircleAvatar(
+            const Center(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 80), // Adjusts the vertical position of the CircleAvatar
+                    child: CircleAvatar(
                       radius: 40,
                       backgroundColor: Colors.black,
                       child: Icon(
@@ -76,18 +78,22 @@ class WelcomePage extends StatelessWidget {
                         size: 40,
                       ),
                     ),
-                    SizedBox(height: 10),
-                    Text(
-                      "Tech-Hub",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    "Tech-Hub",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
+            ),
+
+              
+
               const Spacer(),
               // Welcome Text
               const Padding(
@@ -105,7 +111,7 @@ class WelcomePage extends StatelessWidget {
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Text(
-                  "Tech a marketing platform for technologies, we ship various products worldwide!",
+                  "Tech-Hub a marketing platform for technologies!",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16,
@@ -126,32 +132,32 @@ class WelcomePage extends StatelessWidget {
                     backgroundColor: Colors.black,
                   ),
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => SignInPage())) ;
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const SignInPage())) ;
                   },
                   child: const Text(
                     "Sign in",
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 ),
               ),
               const SizedBox(height: 10),
-              // Sign Up Button
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: OutlinedButton(
                   style: OutlinedButton.styleFrom(
                     minimumSize: const Size(double.infinity, 50),
-                    side: const BorderSide(color: Colors.black),
+                    backgroundColor: Colors.white, // Added white background
+                    side: const BorderSide(color: Colors.white), // Changed border color to white
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25),
                     ),
                   ),
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpPage())) ;
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const SignUpPage()));
                   },
                   child: const Text(
                     "Sign Up",
-                    style: TextStyle(fontSize: 18, color: Colors.black),
+                    style: TextStyle(fontSize: 18, color: Colors.black), // Text color is already black
                   ),
                 ),
               ),

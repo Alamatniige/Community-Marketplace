@@ -64,16 +64,16 @@ class InboxScreen extends StatelessWidget {
                   future: getSellerName(conversation.sellerId),
                   builder: (context, sellerSnapshot) {
                     if (sellerSnapshot.connectionState == ConnectionState.waiting) {
-                      return ListTile(
-                        title: const Text('Loading seller...'),
+                      return const ListTile(
+                        title: Text('Loading seller...'),
                         subtitle: Text('Loading...'),
                         trailing: Icon(Icons.check_circle, color: Colors.grey),
                       );
                     }
 
                     if (sellerSnapshot.hasError) {
-                      return ListTile(
-                        title: const Text('Error fetching seller'),
+                      return const ListTile(
+                        title: Text('Error fetching seller'),
                         subtitle: Text('Error loading message'),
                         trailing: Icon(Icons.check_circle, color: Colors.grey),
                       );
@@ -87,16 +87,16 @@ class InboxScreen extends StatelessWidget {
                         if (messageSnapshot.connectionState == ConnectionState.waiting) {
                           return ListTile(
                             title: Text(sellerName),
-                            subtitle: Text('Loading...'),
-                            trailing: Icon(Icons.check_circle, color: Colors.grey),
+                            subtitle: const Text('Loading...'),
+                            trailing: const Icon(Icons.check_circle, color: Colors.grey),
                           );
                         }
 
                         if (messageSnapshot.hasError) {
                           return ListTile(
                             title: Text(sellerName),
-                            subtitle: Text('Error loading message'),
-                            trailing: Icon(Icons.check_circle, color: Colors.grey),
+                            subtitle: const Text('Error loading message'),
+                            trailing: const Icon(Icons.check_circle, color: Colors.grey),
                           );
                         }
 
@@ -129,13 +129,13 @@ class InboxScreen extends StatelessWidget {
               },
             );
           } else {
-            return Center(
+            return const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.chat_bubble_outline, size: 64, color: Colors.grey),
-                  const SizedBox(height: 16),
-                  const Text(
+                  Icon(Icons.chat_bubble_outline, size: 64, color: Colors.grey),
+                  SizedBox(height: 16),
+                  Text(
                     'No conversations yet!',
                     style: TextStyle(fontSize: 18, color: Colors.grey),
                   ),

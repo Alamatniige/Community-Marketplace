@@ -34,11 +34,11 @@ class _SignUpPageState extends State<SignUpPage> {
           // Call the signUp method
           await _controller.signUp(fullName, username, email, password);
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Sign-up successful!')),
+            const SnackBar(content: Text('Sign-up successful!')),
           );
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => SignInPage()),
+            MaterialPageRoute(builder: (context) => const SignInPage()),
           );
         } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -47,12 +47,12 @@ class _SignUpPageState extends State<SignUpPage> {
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Passwords do not match')),
+          const SnackBar(content: Text('Passwords do not match')),
         );
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('All fields are required')),
+        const SnackBar(content: Text('All fields are required')),
       );
     }
 
@@ -64,12 +64,8 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-      ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : Center(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -77,9 +73,9 @@ class _SignUpPageState extends State<SignUpPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // Logo
-                    Center(
+                    const Center(
                       child: Column(
-                        children: const [
+                        children: [
                           CircleAvatar(
                             radius: 40,
                             backgroundColor: Colors.black,
@@ -101,63 +97,63 @@ class _SignUpPageState extends State<SignUpPage> {
                         ],
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     // Sign Up Text
-                    Text(
+                    const Text(
                       'Sign Up',
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     //Name TextField
                     TextField(
                       controller: _fullNameController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Full Name',
                         border: UnderlineInputBorder(),
                       ),
                     ),
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
                     // Username TextField
                     TextField(
                       controller: _usernameController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Username',
                         border: UnderlineInputBorder(),
                       ),
                     ),
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
                     // Email Address TextField
                     TextField(
                       controller: _emailController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Email Address',
                         border: UnderlineInputBorder(),
                       ),
                     ),
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
                     // Password TextField
                     TextField(
                       controller: _passwordController,
                       obscureText: true,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Password',
                         border: UnderlineInputBorder(),
                       ),
                     ),
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
                     // Confirm Password TextField
                     TextField(
                       controller: _confirmPasswordController,
                       obscureText: true,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Confirm Password',
                         border: UnderlineInputBorder(),
                       ),
                     ),
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
                     // Sign Up Button
                     SizedBox(
                       width: double.infinity,
@@ -165,9 +161,9 @@ class _SignUpPageState extends State<SignUpPage> {
                         onPressed: _handleSignUp,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.lightBlue,
-                          padding: EdgeInsets.symmetric(vertical: 15),
+                          padding: const EdgeInsets.symmetric(vertical: 15),
                         ),
-                        child: Text(
+                        child: const Text(
                           'Sign Up',
                           style: TextStyle(
                             fontSize: 16,
@@ -176,20 +172,20 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     // Sign In Text
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Already have an account? "),
+                        const Text("Already have an account? "),
                         TextButton(
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => SignInPage()),
+                              MaterialPageRoute(builder: (context) => const SignInPage()),
                             );
                           },
-                          child: Text(
+                          child: const Text(
                             'Sign In',
                             style: TextStyle(color: Colors.blue),
                           ),

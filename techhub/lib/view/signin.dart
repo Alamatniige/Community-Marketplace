@@ -17,6 +17,7 @@ class _SignInPageState extends State<SignInPage> {
   final _controller = SignInController();
 
   bool _rememberMe = false;
+  bool _isPasswordVisible = false;
 
   @override
   void initState() {
@@ -46,9 +47,9 @@ class _SignInPageState extends State<SignInPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Logo
-              Center(
+              const Center(
                 child: Column(
-                  children: const [
+                  children: [
                     CircleAvatar(
                       radius: 40,
                       backgroundColor: Colors.black,
@@ -92,10 +93,22 @@ class _SignInPageState extends State<SignInPage> {
               // Password TextField
               TextField(
                 controller: _passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
+                obscureText: !_isPasswordVisible,
+                decoration: InputDecoration(
                   labelText: 'Password',
-                  border: UnderlineInputBorder(),
+                  border: const UnderlineInputBorder(),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible;
+                      });
+                    },
+                  ),
                 ),
               ),
               const SizedBox(height: 10),
@@ -121,7 +134,7 @@ class _SignInPageState extends State<SignInPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ForgotPassPage(),
+                          builder: (context) => const ForgotPassPage(),
                         ),
                       );
                     },
@@ -150,7 +163,8 @@ class _SignInPageState extends State<SignInPage> {
                         );
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => DashboardPage()),
+                          MaterialPageRoute(
+                              builder: (context) => const DashboardPage()),
                         );
                       } catch (e) {
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -186,7 +200,8 @@ class _SignInPageState extends State<SignInPage> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => SignUpPage()),
+                        MaterialPageRoute(
+                            builder: (context) => const SignUpPage()),
                       );
                     },
                     child: const Text('Sign Up'),

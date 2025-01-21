@@ -49,9 +49,9 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 // Logo
-                Center(
+                const Center(
                   child: Column(
-                    children: const [
+                    children: [
                       CircleAvatar(
                         radius: 40,
                         backgroundColor: Colors.black,
@@ -131,7 +131,7 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
 }
 
 void main() {
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     home: ForgotPassPage(),
   ));
 }
