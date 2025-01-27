@@ -46,7 +46,6 @@ class WelcomePage extends StatelessWidget {
               ),
             ),
           ),
-          // Overlay for gradient effect
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -68,7 +67,7 @@ class WelcomePage extends StatelessWidget {
               child: Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(top: 80), // Adjusts the vertical position of the CircleAvatar
+                    padding: EdgeInsets.only(top: 80),
                     child: CircleAvatar(
                       radius: 40,
                       backgroundColor: Colors.black,
@@ -91,9 +90,6 @@ class WelcomePage extends StatelessWidget {
                 ],
               ),
             ),
-
-              
-
               const Spacer(),
               // Welcome Text
               const Padding(
@@ -146,8 +142,8 @@ class WelcomePage extends StatelessWidget {
                 child: OutlinedButton(
                   style: OutlinedButton.styleFrom(
                     minimumSize: const Size(double.infinity, 50),
-                    backgroundColor: Colors.white, // Added white background
-                    side: const BorderSide(color: Colors.white), // Changed border color to white
+                    backgroundColor: Colors.white,
+                    side: const BorderSide(color: Colors.white),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25),
                     ),
@@ -157,7 +153,7 @@ class WelcomePage extends StatelessWidget {
                   },
                   child: const Text(
                     "Sign Up",
-                    style: TextStyle(fontSize: 18, color: Colors.black), // Text color is already black
+                    style: TextStyle(fontSize: 18, color: Colors.black), 
                   ),
                 ),
               ),
